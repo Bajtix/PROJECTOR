@@ -23,6 +23,8 @@ public struct TrimString {
             end = TimeString.FromProgress(1);
         }
     }
+
+    public static TrimString Full => new TrimString() { start = TimeString.FromProgress(0), end = TimeString.FromProgress(1) };
 }
 
 public class TrimStringConverter : JsonConverter<TrimString> {
