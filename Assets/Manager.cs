@@ -48,12 +48,20 @@ public class Manager : MonoBehaviour {
 
         int desiredWidth = 1280, desiredHeight = 720;
         bool fullscreen = false;
+        
+        Debug.Log($"Used mouse mode: {m_projector.MouseMode}");
 
         try {
             desiredWidth = int.Parse(m_projector.Size.Split('x')[0]);
             desiredHeight = int.Parse(m_projector.Size.Split('x')[1]);
             fullscreen = bool.Parse(m_projector.Size.Split('x')[2]);
-
+            if(m_projector.MouseMode == MouseMode.Hidden || m_projector.MouseMode == MouseMode.Laser) {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
             Screen.SetResolution(desiredWidth, desiredHeight, fullscreen);
         } catch(Exception e) {
             Debug.LogError("Failed to set resolution");
@@ -86,7 +94,8 @@ public class Manager : MonoBehaviour {
         m_currentClip = clip;
         m_currentScene = scene;
 
-        if (includeInHistory) m_history.Push(name);
+        // dont push twice
+        if (includeInHistory && (m_history.Count == 0 || m_history.Peek() != name)) m_history.Push(name);
     }
 
     public bool IsWithinSafeMargin => m_player.length > 0.05 && m_player.time >= m_player.length - 0.05;

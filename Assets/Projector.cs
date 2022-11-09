@@ -10,6 +10,8 @@ public class Projector {
     [JsonProperty("size")] public string Size { get; private set; }
     [JsonProperty("clips")] private Dictionary<string, VideoClip> m_clips;
     [JsonProperty("scenes")] private Dictionary<string, VideoScene> m_scenes;
+    [JsonProperty("mouse")] public MouseMode MouseMode { get; private set; } = MouseMode.Mouse;
+
 
     [JsonIgnore] public int ClipCount => m_clips.Count;
     [JsonIgnore] public int SceneCount => m_scenes.Count;
