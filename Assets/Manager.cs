@@ -18,6 +18,8 @@ public class Manager : MonoBehaviour {
     [SerializeField] private Canvas m_canvas;
     [SerializeField] private string m_path;
 
+    [SerializeField] private TMPro.TextMeshProUGUI m_dbgtext;
+
     private Projector m_projector;
     private VideoScene m_currentScene;
     private VideoClip m_currentClip;
@@ -48,6 +50,8 @@ public class Manager : MonoBehaviour {
 
         int desiredWidth = 1280, desiredHeight = 720;
         bool fullscreen = false;
+
+        m_player.audioOutputMode = VideoAudioOutputMode.None;
         
         Debug.Log($"Used mouse mode: {m_projector.MouseMode}");
 
@@ -79,6 +83,7 @@ public class Manager : MonoBehaviour {
     }
 
     public void PlayScene(string name, bool includeInHistory = true) {
+        m_dbgtext.text = name;
         Debug.Log("Playing " + name);
         
         var scene = m_projector.GetScene(name);
@@ -125,9 +130,15 @@ public class Manager : MonoBehaviour {
             var pressed = Input.GetKeyDown((KeyCode)values[i]);
             if (pressed) { 
                 var scr = m_currentScene.GetTransitionForKey(keyCode);
-                if (scr == "") continue;
-                PlayScene(scr);
-                return;
+                var global = m_projector.GetTransitionForKey(keyCode);
+                if (scr != "") {
+                    PlayScene(scr);
+                    return;
+                }
+                if (global != "") { 
+                    PlayScene(global);
+                    return;
+                }
             }
         }
 

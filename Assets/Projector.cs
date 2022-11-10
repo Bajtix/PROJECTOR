@@ -11,7 +11,8 @@ public class Projector {
     [JsonProperty("clips")] private Dictionary<string, VideoClip> m_clips;
     [JsonProperty("scenes")] private Dictionary<string, VideoScene> m_scenes;
     [JsonProperty("mouse")] public MouseMode MouseMode { get; private set; } = MouseMode.Mouse;
-
+    [JsonProperty("shortcuts")] private Dictionary<string, string> m_shortcuts = new Dictionary<string, string>();
+    [JsonIgnore] public Dictionary<string, string> Shortcuts => m_shortcuts;
 
     [JsonIgnore] public int ClipCount => m_clips.Count;
     [JsonIgnore] public int SceneCount => m_scenes.Count;
@@ -30,5 +31,12 @@ public class Projector {
             return null;
         }
         return m_scenes[name];
+    }
+
+    public string GetTransitionForKey(KeyCode key) {
+        if (Shortcuts.ContainsKey(key.ToString())) {
+            return Shortcuts[key.ToString()];
+        }
+        return "";
     }
 }
